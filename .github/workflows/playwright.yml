@@ -7,9 +7,11 @@ on:
   schedule:
     - cron: '30 7 * * *'
 jobs:
-  test:
-    timeout-minutes: 60
+  test_metrix:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        vu: [1,2,3]
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
@@ -20,7 +22,10 @@ jobs:
       - name: Install Playwright Browsers
         run: npx playwright install --with-deps
       - name: Run Playwright tests
-        run: npx playwright test
+        run: |
+          for i in {1..10} do
+            npx playwright test
+          done
       - uses: actions/upload-artifact@v3
         if: always()
         with:
